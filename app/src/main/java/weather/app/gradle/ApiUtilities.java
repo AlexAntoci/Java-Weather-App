@@ -15,6 +15,9 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 // ****************************************** Class used for building API related tools ******************************************
 
 public class ApiUtilities {
@@ -26,15 +29,9 @@ public class ApiUtilities {
         return fullQuery;
     }
 
-    // Class used to create objects out of JSON data using GSON
-
-    public class ApiResponse {
-
-    }
-
     // Method used for building, sending and receving data from GET requests.
 
-    public Object getRequest(String q, String function, int days) {
+    public ArrayList getRequest(String q, String function, int days) {
 
         HttpClient client = HttpClient.newHttpClient();
 
@@ -48,6 +45,10 @@ public class ApiUtilities {
 
         if (function == "Current Weather") {
             result = "34";
+            // This one needs to be implemented, however not needed for the task. Just
+            // decided to add this so the method can support more query types if needed to
+            // be added in the future.
+
         } else if (function == "Forecast") {
             try {
 
@@ -67,26 +68,31 @@ public class ApiUtilities {
 
                 result = response.body();
 
-                // Parsing JSON into a smaller Token to make deserialization easier with GSON
-
-                JsonParser jsonParser = new JsonParser();
-                JsonElement forecast = jsonParser.parse(result).getAsJsonObject().getAsJsonObject("forecast")
-                        .getAsJsonArray("forecastday").get(1).getAsJsonObject().getAsJsonObject("day");
-                System.out.println(forecast);
-
-                //
-
-                Gson gson = new Gson();
-
-                WeatherDataObjectCreator weatherObject = gson.fromJson(forecast, WeatherDataObjectCreator.class);
-                System.out.println(weatherObject.getMaxTemp());
-
             } catch (Exception e) {
                 System.out.println(e);
             }
         }
 
-        return result;
+        // Parsing JSON into a smaller Token to make deserialization easier with GSON
+
+        JsonParser jsonParser = new JsonParser();
+        JsonElement forecast = jsonParser.parse(result).getAsJsonObject().getAsJsonObject("forecast")
+                .getAsJsonArray("forecastday").get(1).getAsJsonObject().getAsJsonObject("day");
+
+        // Performing JSON conversion to Object format
+
+        Gson gson = new Gson();
+
+        WeatherDataObjectCreator weatherObject = gson.fromJson(forecast, WeatherDataObjectCreator.class);
+
+        ArrayList<String> dataSet = new ArrayList<String>();
+
+        dataSet.add(weatherObject.maxtemp_c);
+        dataSet.add(weatherObject.mintemp_c);
+        dataSet.add(weatherObject.avghumidity);
+        dataSet.add(weatherObject.maxwind_kph);
+
+        return dataSet;
     }
 
 }

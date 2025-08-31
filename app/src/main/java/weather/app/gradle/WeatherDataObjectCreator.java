@@ -1,34 +1,42 @@
 package weather.app.gradle;
 
+import java.util.ArrayList;
+
 // ****************************************** Class used to create Weather Objects which contain needed data taken from JSON in order to further be processed. ******************************************
 
 public class WeatherDataObjectCreator {
 
-    private Float maxtemp_c;
-    private Float mintemp_c;
-    private int avghumidity;
+    public String maxtemp_c;
+    public String mintemp_c;
+    public String avghumidity;
+    public String maxwind_kph;
 
     // Object Setter
-    public void SetObject(Float maxtemp_c, Float mintemp_c, int avghumidity) {
+    public void SetObject(String maxtemp_c, String mintemp_c, String avghumidity, String maxwind_kph) {
 
         this.maxtemp_c = maxtemp_c;
         this.mintemp_c = mintemp_c;
         this.avghumidity = avghumidity;
+        this.maxwind_kph = maxwind_kph;
 
     }
 
     // Object Getters
 
-    public Float getMaxTemp() {
+    public String getMaxTemp() {
         return maxtemp_c;
     }
 
-    public Float getMinTemp() {
+    public String getMinTemp() {
         return mintemp_c;
     }
 
-    public int getHumidity() {
+    public String getHumidity() {
         return avghumidity;
+    }
+
+    public String getWindSpeed() {
+        return maxwind_kph;
     }
 
 }
