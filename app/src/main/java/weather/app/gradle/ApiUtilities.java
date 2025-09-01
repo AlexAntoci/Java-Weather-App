@@ -14,6 +14,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.JsonPrimitive;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,9 +76,21 @@ public class ApiUtilities {
 
         // Parsing JSON into a smaller Token to make deserialization easier with GSON
 
+        // This parse gets MaxTemp, MinTemp, Humidity, WindSpeed
         JsonParser jsonParser = new JsonParser();
         JsonElement forecast = jsonParser.parse(result).getAsJsonObject().getAsJsonObject("forecast")
                 .getAsJsonArray("forecastday").get(1).getAsJsonObject().getAsJsonObject("day");
+
+        // This parse gets City Name
+        JsonParser jsonParser2 = new JsonParser();
+        JsonElement forecast2 = jsonParser2.parse(result).getAsJsonObject().getAsJsonObject("location")
+                .getAsJsonPrimitive("name");
+
+        // This parse gets WindDirection
+        JsonParser jsonParser3 = new JsonParser();
+        JsonElement forecast3 = jsonParser3.parse(result).getAsJsonObject().getAsJsonObject("forecast")
+                .getAsJsonArray("forecastday").get(1).getAsJsonObject().getAsJsonArray("hour").get(1).getAsJsonObject()
+                .getAsJsonPrimitive("wind_dir");
 
         // Performing JSON conversion to Object format
 
@@ -87,10 +100,12 @@ public class ApiUtilities {
 
         ArrayList<String> dataSet = new ArrayList<String>();
 
+        dataSet.add(forecast2.toString());
         dataSet.add(weatherObject.maxtemp_c);
         dataSet.add(weatherObject.mintemp_c);
         dataSet.add(weatherObject.avghumidity);
         dataSet.add(weatherObject.maxwind_kph);
+        dataSet.add(forecast3.toString());
 
         return dataSet;
     }
